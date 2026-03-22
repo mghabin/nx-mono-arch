@@ -1,107 +1,243 @@
-# New Nx Repository
+# nx-mono-arch
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+> Enterprise-grade Nx monorepo template designed to scale from small teams to 500-2000+ developers.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+[![Nx](https://img.shields.io/badge/Nx-22.6.0-143055?logo=nx)](https://nx.dev)
+[![Nx Cloud](https://img.shields.io/badge/Nx%20Cloud-Ready-brightgreen)](https://nx.app)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
-<!-- BEGIN: nx-cloud -->
-## Try the full Nx platform
-🚀 If you haven't connected to Nx Cloud yet, [complete your setup here](https://cloud.nx.app/setup/connect-workspace/guide). Get faster builds with remote caching, distributed task execution, and self-healing CI. [See how your workspace can benefit](#nx-cloud).
-<!-- END: nx-cloud -->
-## Generate a library
+## What is this?
 
-```sh
-npx nx g @nx/js:lib packages/pkg1 --publishable --importPath=@my-org/pkg1
+A production-ready monorepo template showing how to organize code at scale using [Nx](https://nx.dev).
+
+### Key Features
+
+- **Team Ownership** — Each team owns their bounded context under `src/teams/<name>/`
+- **Technology Agnostic** — Supports any frontend, backend, mobile, or cloud stack
+- **Minimal Shared** — Only primitives and utilities in `src/shared/`, no business logic
+- **Anti-Corruption Layers** — Adapters isolate teams from each other's API changes
+- **Enterprise Governance** — ARB, RFC process, dependency policies
+- **Nx Cloud** — Remote caching and distributed task execution
+
+## Where Do I Go?
+
+| I am a...                 | Start here                                                                     | What I'll find                           |
+| ------------------------- | ------------------------------------------------------------------------------ | ---------------------------------------- |
+| 🖥️ **Backend Developer**  | [`src/teams/<team>/apps/*-api/`](src/teams/)                                   | APIs, workers, consumers, orchestrators  |
+| 🌐 **Frontend Developer** | [`src/teams/web/`](src/teams/web/)                                             | Web apps, micro-frontends, design system |
+| 📱 **Mobile Developer**   | [`src/teams/mobile/`](src/teams/mobile/)                                       | React Native / Expo apps, mobile BFF     |
+| ⚙️ **DevOps / SRE**       | [`ops/`](ops/)                                                                 | Terraform, Kubernetes, CI, compliance    |
+| 🏗️ **Platform Engineer**  | [`src/teams/platform/`](src/teams/platform/)                                   | Auth, observability, messaging, config   |
+| 📐 **Architect**          | [`ARCHITECTURE.md`](ARCHITECTURE.md), [`tools/governance/`](tools/governance/) | ADRs, RFCs, policies                     |
+| 🆕 **New to the repo**    | [`docs/onboarding/`](docs/onboarding/)                                         | Role-specific onboarding guides          |
+
+## Architecture
+
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full architecture document.
+
+## Directory Structure
+
+```
+nx-mono-arch/
+├── src/                        # All source code
+│   ├── teams/                  # Team-owned bounded contexts
+│   │   ├── platform/           # Platform & infrastructure services
+│   │   ├── orders/             # Orders domain (API, worker, consumer)
+│   │   ├── products/           # Products domain (API, worker, consumer)
+│   │   ├── mobile/             # Mobile apps
+│   │   └── web/                # Web apps, micro-frontends
+│   ├── shared/                 # Minimal shared primitives
+│   │   ├── libs/               # @shared/types, @shared/utils
+│   │   └── packages/           # Publishable configs, SDKs
+│   └── packages/               # Top-level workspace packages
+│
+├── ops/                        # Operational concerns (DevOps starts here)
+│   ├── infra/                  # Terraform, Kubernetes, Helm
+│   ├── ci/                     # CI pipeline templates, policies
+│   ├── compliance/             # SOC2, GDPR evidence
+│   └── scripts/                # Automation scripts
+│
+├── docs/                       # Documentation
+│   ├── architecture/           # ADRs, API contracts
+│   ├── onboarding/             # Role-specific developer guides
+│   └── runbooks/               # Incident response
+│
+├── tools/                      # Governance & dev tooling
+│   ├── governance/             # ARB, RFC, policies
+│   ├── generators/             # Nx custom generators
+│   └── validators/             # Custom linting rules
+│
+└── [config files]              # nx.json, package.json, tsconfig.*, etc.
 ```
 
-## Run tasks
+### Design Philosophy
 
-To build the library use:
+| Directory | Contains                       | Rationale                                        |
+| --------- | ------------------------------ | ------------------------------------------------ |
+| `src/`    | All compilable source code     | Clear boundary: "if it compiles, it's in `src/`" |
+| `ops/`    | Infrastructure, CI, compliance | Operational concerns separated from code         |
+| `docs/`   | Documentation                  | Industry standard at root for GitHub rendering   |
+| `tools/`  | Governance, generators         | Dev tooling and process                          |
 
-```sh
-npx nx build pkg1
+## Naming Conventions
+
+Every deployable artifact uses a **suffix** that tells you what it is, how it deploys, and what infrastructure it needs:
+
+### Backend Services
+
+| Suffix           | Type                                | Deploys with              | Example                                         |
+| ---------------- | ----------------------------------- | ------------------------- | ----------------------------------------------- |
+| `*-api`          | REST / gRPC / GraphQL API           | Load balancer, ingress    | `order-api`, `product-api`                      |
+| `*-worker`       | Background job processor            | Queue (Bull, Celery, SQS) | `payment-worker`, `email-worker`                |
+| `*-consumer`     | Event/message subscriber            | Pub/Sub (Kafka, RabbitMQ) | `inventory-consumer`, `analytics-consumer`      |
+| `*-orchestrator` | Workflow/saga coordinator           | Temporal, Step Functions  | `order-orchestrator`, `onboarding-orchestrator` |
+| `*-scheduler`    | Cron / periodic tasks               | Cron trigger, CloudWatch  | `report-scheduler`, `cleanup-scheduler`         |
+| `*-stream`       | Real-time stream processor          | Kafka Streams, Flink      | `clickstream-stream`, `fraud-stream`            |
+| `*-gateway`      | API Gateway / BFF                   | Edge, public-facing       | `api-gateway`, `mobile-gateway`                 |
+| `*-proxy`        | Reverse proxy / protocol translator | Sidecar, mesh             | `grpc-proxy`, `websocket-proxy`                 |
+| `*-fn`           | Serverless function                 | Lambda, Cloud Functions   | `resize-fn`, `webhook-fn`                       |
+| `*-migration`    | Database migration runner           | One-off job               | `order-migration`                               |
+| `*-seed`         | Data seeder / fixture loader        | One-off job               | `catalog-seed`                                  |
+
+### Frontend Apps
+
+| Suffix                     | Type                            | Example                              |
+| -------------------------- | ------------------------------- | ------------------------------------ |
+| `*-portal` / `*-dashboard` | SPA (React, Angular, Vue)       | `customer-portal`, `admin-dashboard` |
+| `*-web`                    | SSR app (Next.js, Nuxt)         | `storefront-web`, `docs-web`         |
+| `*-mfe`                    | Micro-frontend fragment         | `checkout-mfe`, `profile-mfe`        |
+| `*-site`                   | Static site (Astro, Docusaurus) | `marketing-site`, `api-docs-site`    |
+| `*-widget`                 | Embeddable component            | `chat-widget`, `feedback-widget`     |
+| `*-emails`                 | Transactional email templates   | `order-emails`, `marketing-emails`   |
+| `design-system`            | Storybook / component library   | `design-system`                      |
+
+### Mobile Apps
+
+| Suffix         | Type                             | Example                      |
+| -------------- | -------------------------------- | ---------------------------- |
+| `*-app`        | Mobile app (RN, Flutter, native) | `consumer-app`, `driver-app` |
+| `*-mobile-bff` | Backend-for-frontend (mobile)    | `mobile-bff`                 |
+
+### Libraries (non-deployable)
+
+| Name Pattern       | Purpose                              | Example                    |
+| ------------------ | ------------------------------------ | -------------------------- |
+| `domain`           | Pure models, events, business rules  | `@orders/domain`           |
+| `data-access`      | Repository, ORM, database queries    | `@orders/data-access`      |
+| `feature-*`        | Feature module (UI + logic)          | `@web/feature-checkout`    |
+| `ui` / `ui-*`      | Presentational components            | `@web/ui`, `@mobile/ui`    |
+| `state`            | State management                     | `@web/state`               |
+| `messaging`        | Event bus abstractions, producers    | `@platform/messaging`      |
+| `auth`             | Auth utilities, guards               | `@platform/auth`           |
+| `observability`    | Logging, tracing, metrics            | `@platform/observability`  |
+| `config`           | Configuration loading, validation    | `@platform/config`         |
+| `sdk` / `client-*` | API client SDK for other teams       | `@orders/sdk`              |
+| `adapter-*`        | Anti-corruption layer                | `@orders/adapter-payments` |
+| `contract`         | Shared API schema (OpenAPI, Proto)   | `@orders/contract`         |
+| `jobs`             | Job definitions for worker/scheduler | `@orders/jobs`             |
+| `testing`          | Test utilities, factories, mocks     | `@shared/testing`          |
+| `util` / `util-*`  | Pure utility functions               | `@shared/utils`            |
+
+### Tests
+
+| Directory            | Purpose                                  |
+| -------------------- | ---------------------------------------- |
+| `tests/contract/`    | Consumer-driven contract verification    |
+| `tests/integration/` | Service + real dependencies              |
+| `tests/e2e/`         | Full flow through multiple services      |
+| `tests/load/`        | k6, Artillery, JMeter scripts            |
+| `tests/smoke/`       | Post-deploy health verification          |
+| `tests/visual/`      | Screenshot regression (Chromatic, Percy) |
+
+## Template Setup
+
+After creating a new repository from this template, customize the following placeholders:
+
+| Placeholder | Files to update |
+|---|---|
+| `<your-org>` | `CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, `docs/onboarding/new-developer.md` |
+| Nx Cloud | Run `pnpm nx connect` to link your own Nx Cloud workspace |
+
+Search for `<your-org>` across the repo and replace with your GitHub organization/contact info.
+
+## Quick Start
+
+```bash
+# Install dependencies
+pnpm install
+
+# Visualize the project graph
+pnpm run graph
+
+# Type check all projects
+pnpm run typecheck
+
+# Run all tests
+pnpm run test
+
+# Connect to Nx Cloud (optional, for remote caching & CI distribution)
+pnpm nx connect
 ```
 
-To run any task with Nx use:
+## Common Commands
 
-```sh
-npx nx <target> <project-name>
+```bash
+# Run a specific target for a project
+pnpm nx build <project-name>
+pnpm nx test <project-name>
+pnpm nx lint <project-name>
+
+# Run affected projects only (CI-optimized)
+pnpm nx affected -t build
+pnpm nx affected -t test
+
+# Generate a new library
+pnpm nx g @nx/js:lib src/teams/<team>/libs/<lib-name> --publishable --importPath=@<team>/<lib-name>
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+## Adding a New Team
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```bash
+# 1. Create team directory structure
+mkdir -p src/teams/new-team/{apps,libs,packages,tests/{contract,integration,e2e,load}}
 
-## Versioning and releasing
+# 2. Generate domain library
+pnpm nx g @nx/js:lib src/teams/new-team/libs/domain --publishable --importPath=@new-team/domain
 
-To version and release the library use
+# 3. Add a team README (see src/teams/orders/README.md as template)
 
-```
-npx nx release
-```
-
-Pass `--dry-run` to see what would happen without actually releasing the library.
-
-[Learn more about Nx release &raquo;](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Keep TypeScript project references up to date
-
-Nx automatically updates TypeScript [project references](https://www.typescriptlang.org/docs/handbook/project-references.html) in `tsconfig.json` files to ensure they remain accurate based on your project dependencies (`import` or `require` statements). This sync is automatically done when running tasks such as `build` or `typecheck`, which require updated references to function correctly.
-
-To manually trigger the process to sync the project graph dependencies information to the TypeScript project references, run the following command:
-
-```sh
-npx nx sync
+# 4. Add team-specific configuration
+# See ARCHITECTURE.md → Team Ownership Model
 ```
 
-You can enforce that the TypeScript project references are always in the correct state when running in CI by adding a step to your CI job configuration that runs the following command:
+## Technology Support
 
-```sh
-npx nx sync:check
-```
+This template supports any technology via Nx plugins:
 
-[Learn more about nx sync](https://nx.dev/reference/nx-commands#sync)
+| Stack               | Plugin                         |
+| ------------------- | ------------------------------ |
+| React / Next.js     | `@nx/react`, `@nx/next`        |
+| Angular             | `@nx/angular`                  |
+| Vue                 | `@nx/vue`                      |
+| Node / NestJS       | `@nx/node`                     |
+| .NET                | `@nx/dotnet-core`              |
+| React Native / Expo | `@nx/react-native`, `@nx/expo` |
+| Python              | `@nx/python`                   |
+| Go, Rust, Java...   | Community plugins or custom    |
 
-## Nx Cloud
+## Contributing
 
-Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full guide. In summary:
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+1. Read [ARCHITECTURE.md](./ARCHITECTURE.md)
+2. Follow the team ownership model
+3. Submit RFCs for cross-team changes (`tools/governance/rfc/template.md`)
+4. All shared changes require ARB approval
 
-### Set up CI (non-Github Actions CI)
+## Security
 
-**Note:** This is only required if your CI provider is not GitHub Actions.
+See [SECURITY.md](./SECURITY.md) for vulnerability reporting.
 
-Use the following command to configure a CI workflow for your workspace:
+## License
 
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+[MIT](./LICENSE)

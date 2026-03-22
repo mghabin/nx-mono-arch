@@ -1,5 +1,106 @@
-# Add files here to ignore them from prettier formatting
-/dist
-/coverage
-/.nx/cache
-/.nx/workspace-data
+# ============================================================
+# Prettierignore — Blocklist Strategy (industry convention)
+# ============================================================
+# Follows the standard pattern used by Nx, Babel, Turbo, and
+# Angular: explicitly list what Prettier should skip.
+# See: https://prettier.io/docs/ignore
+# ============================================================
+
+# ─── Build artifacts & caches ────────────────────────────────
+dist
+out-tsc
+build
+tmp
+coverage
+.nx/cache
+.nx/workspace-data
+
+# ─── Dependencies ────────────────────────────────────────────
+node_modules
+
+# ─── Lock files (managed by package manager) ─────────────────
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# ─── Generated code ──────────────────────────────────────────
+**/generated/
+**/__generated__/
+**/*.generated.ts
+**/*.generated.js
+
+# ─── Non-JS stacks (use their own formatters) ────────────────
+# C# / .NET  → dotnet format
+*.cs
+*.csproj
+*.sln
+*.fs
+*.fsproj
+
+# Go  → gofmt / goimports
+*.go
+
+# Python  → black / ruff
+*.py
+*.pyi
+
+# Java / Kotlin  → google-java-format / ktfmt
+*.java
+*.kt
+*.kts
+
+# Rust  → rustfmt
+*.rs
+
+# Terraform / HCL  → terraform fmt
+*.tf
+*.tfvars
+*.hcl
+
+# Protocol Buffers  → buf format
+*.proto
+
+# SQL  → sqlfluff / pg_format
+*.sql
+
+# Ruby  → rubocop
+*.rb
+
+# PHP  → php-cs-fixer
+*.php
+
+# Swift  → swift-format
+*.swift
+
+# Elixir  → mix format
+*.ex
+*.exs
+
+# Dart  → dart format
+*.dart
+
+# ─── Infrastructure files ────────────────────────────────────
+Dockerfile
+Dockerfile.*
+Makefile
+**/.dockerignore
+
+# ─── IDE & editor configs ────────────────────────────────────
+.vscode
+.idea
+.fleet
+
+# ─── Binary & media assets ───────────────────────────────────
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.woff
+*.woff2
+*.ttf
+*.eot
+*.pdf
+*.zip
+*.tar.gz

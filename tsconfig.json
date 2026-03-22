@@ -2,5 +2,21 @@
   "extends": "./tsconfig.base.json",
   "compileOnSave": false,
   "files": [],
-  "references": []
+  "references": [
+    {
+      "path": "./src/shared/libs/types"
+    },
+    {
+      "path": "./src/shared/libs/utils"
+    },
+    {
+      "path": "./src/teams/platform/libs/core"
+    },
+    {
+      "path": "./src/teams/orders/libs/domain"
+    },
+    {
+      "path": "./src/teams/products/libs/domain"
+    }
+  ]
 }

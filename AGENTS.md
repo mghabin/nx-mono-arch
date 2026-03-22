@@ -1,3 +1,5 @@
+<!-- This file configures AI coding assistants (Cline, Cursor, Copilot, etc.) for this Nx workspace. Managed by Nx. -->
+
 <!-- nx configuration start-->
 <!-- Leave the start & end comments to automatically receive updates. -->
 

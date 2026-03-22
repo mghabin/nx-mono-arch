@@ -1,0 +1,35 @@
+version: 2
+updates:
+  # npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+    groups:
+      nx:
+        patterns:
+          - "@nx/*"
+          - "nx"
+      typescript:
+        patterns:
+          - "typescript"
+          - "tslib"
+      swc:
+        patterns:
+          - "@swc/*"
+          - "@swc-node/*"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "ci"
+      - "dependencies"

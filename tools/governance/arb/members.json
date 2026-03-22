@@ -1,0 +1,24 @@
+{
+  "arbMembers": [
+    {
+      "name": "TBD - Lead Architect",
+      "role": "Chair",
+      "team": "platform",
+      "since": "2026-01-01"
+    },
+    {
+      "name": "TBD - Senior Engineer",
+      "role": "Member",
+      "team": "backend",
+      "since": "2026-01-01"
+    },
+    {
+      "name": "TBD - Senior Engineer",
+      "role": "Member",
+      "team": "frontend",
+      "since": "2026-01-01"
+    }
+  ],
+  "quorum": 2,
+  "meetingCadence": "bi-weekly"
+}

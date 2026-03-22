@@ -1,8 +1,14 @@
 {
-  "name": "@org/source",
+  "name": "@nx-mono-arch/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "build": "pnpm nx run-many -t build",
+    "test": "pnpm nx run-many -t test",
+    "lint": "pnpm nx run-many -t lint",
+    "typecheck": "pnpm nx run-many -t typecheck",
+    "graph": "pnpm nx graph"
+  },
   "private": true,
   "dependencies": {},
   "devDependencies": {
@@ -10,12 +16,11 @@
     "@swc-node/register": "1.11.1",
     "@swc/core": "1.15.8",
     "@swc/helpers": "0.5.18",
+    "@types/node": "20.19.9",
     "nx": "22.6.0",
     "prettier": "^2.6.2",
     "tslib": "^2.3.0",
     "typescript": "~5.9.2"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "packageManager": "pnpm@10.11.0"
 }

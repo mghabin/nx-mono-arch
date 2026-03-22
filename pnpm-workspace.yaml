@@ -1,0 +1,7 @@
+packages:
+  - "src/packages/*"
+  - "src/teams/*/apps/*"
+  - "src/teams/*/libs/*"
+  - "src/teams/*/packages/*"
+  - "src/shared/libs/*"
+  - "src/shared/packages/*"

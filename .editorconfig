@@ -1,0 +1,78 @@
+# ============================================================
+# EditorConfig — Cross-Stack Formatting Safety Net
+# ============================================================
+# Every major editor/IDE reads this natively (VS Code, IntelliJ,
+# Vim, Emacs, etc.). Zero scan overhead — read on file open.
+# This ensures consistent basics across ALL stacks in the monorepo,
+# even those Prettier doesn't handle.
+#
+# See: https://editorconfig.org
+# ============================================================
+
+root = true
+
+# ─── Default (all files) ────────────────────────────────────
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# ─── Markdown (trailing spaces are significant) ─────────────
+[*.md]
+trim_trailing_whitespace = false
+
+# ─── .NET / C# / F# ────────────────────────────────────────
+[*.{cs,csproj,sln,fs,fsproj,vb}]
+indent_size = 4
+
+# ─── Go ─────────────────────────────────────────────────────
+[*.go]
+indent_style = tab
+indent_size = 4
+
+# ─── Python ─────────────────────────────────────────────────
+[*.{py,pyi}]
+indent_size = 4
+
+# ─── Java / Kotlin ──────────────────────────────────────────
+[*.{java,kt,kts,gradle}]
+indent_size = 4
+
+# ─── Rust ────────────────────────────────────────────────────
+[*.rs]
+indent_size = 4
+
+# ─── Terraform / HCL ────────────────────────────────────────
+[*.{tf,hcl,tfvars}]
+indent_size = 2
+
+# ─── YAML (Kubernetes, CI, configs) ─────────────────────────
+[*.{yaml,yml}]
+indent_size = 2
+
+# ─── JSON ────────────────────────────────────────────────────
+[*.{json,json5,jsonc}]
+indent_size = 2
+
+# ─── Makefiles (tabs required) ──────────────────────────────
+[Makefile]
+indent_style = tab
+
+# ─── Dockerfiles ─────────────────────────────────────────────
+[Dockerfile*]
+indent_size = 4
+
+# ─── Shell scripts ───────────────────────────────────────────
+[*.{sh,bash,zsh}]
+indent_size = 2
+
+# ─── Proto / gRPC ───────────────────────────────────────────
+[*.proto]
+indent_size = 2
+
+# ─── SQL ─────────────────────────────────────────────────────
+[*.sql]
+indent_size = 2
