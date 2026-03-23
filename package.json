@@ -14,8 +14,8 @@
   "devDependencies": {
     "@nx/js": "22.6.0",
     "@swc-node/register": "1.11.1",
-    "@swc/core": "1.15.8",
-    "@swc/helpers": "0.5.18",
+    "@swc/core": "1.15.21",
+    "@swc/helpers": "0.5.19",
     "@types/node": "20.19.9",
     "nx": "22.6.0",
     "prettier": "^2.6.2",
